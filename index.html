@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Content Editor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <!-- FontAwesome for icons -->
+    <script src="lib/sdk.js"></script>
+    <!-- jQuery with AJAX -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Button to insert the HTML block -->
+        <div class="align-center">
+            <button class="btn btn-success mb-3" onclick="insertHTMLBlock()">Get Template<i class="fas fa-plus"></i></button>
+            <button class="btn btn-success mb-3" id="insert">Insert Content<i class="fas fa-plus"></i></button>
+        </div>
+        <!-- Placeholder for potentially editing the inserted content -->
+        <div id="contentEditor" contenteditable="true" style="border: 1px solid #ccc; padding: 10px; min-height: 200px;">
+            Click the button to insert content here...
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var sdk = new window.sfdc.BlockSDK({
+            blockEditorWidth: 600,
+            tabs: [
+            "htmlblock", // This is the HTML Editor Tab
+            "stylingblock", // This is the styling tab
+            ],
+        }); // Initialize the BlockSDK
+
+        let realEditing; // Declare variable outside the function for global scope
+
+        function insertHTMLBlock() {
+            var htmlContent = `
+            <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                <tr>
+                    <td class="darkmode-bg bg-secondary-color" style="padding: 36px 34px 60px; background-color: %%=v(@globalColorBackgroundHEX)=%%;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                            <tr>
+                                <td class="text-primary-color" style="padding: 12px; font-family: sans-serif; font-size: 16px; line-height: 22px; color: %%=v(@globalColorPrimaryHEX)=%%;">
+                                    <h1 style="margin: 0 0 12px; font-size: 32px; line-height: 36px; color: %%=v(@globalColorPrimaryHEX)=%%; font-weight: bold;">
+                                        Headline to go here</h1>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 0 12px; font-family: sans-serif; font-size: 16px; line-height: 22px; color: #3A3A3A;">
+                                        <p style="margin: 0 0 12px;">
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vitae augue eget tortor malesuada vulputate.
+                                        </p>
+                                        <p style="margin: 0;">
+                                            Etiam egestas vitae libero id ornare. Quisque ut mauris leo. Integer congue lectus ex, vitae sagittis dui sodales sed.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                `;
+                // Set the content in the editable div to allow further editing
+                document.getElementById("contentEditor").innerHTML = htmlContent;
+                // Optionally update the block's content in the email template via SDK
+                sdk.setContent(htmlContent);
+            }
+            let innerHTMLContent ;
+            // Event binding for "Insert Content" button
+            $("#insert").on("click", function () {
+                innerHTMLContent = $("#contentEditor").html();
+                console.log("Insert button clicked");
+                console.log("HTML: "+innerHTMLContent);
+                sdk.setContent(innerHTMLContent);
+            });
+
+            // Example: Fetch user-specific settings
+            sdk.getUserData(function (userData) {
+                console.log("User preferences retrieved:", userData);
+                // Adjust content or UI based on these preferences
+            });
+
+
+        </script>
+    </body>
+    </html>
