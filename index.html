@@ -82,6 +82,21 @@
                 // Adjust content or UI based on these preferencess
             });
 
+            // Assuming user input or dynamic data to be included
+            var userInput = 'Special offer!';  // Example user input
+
+            // Embedding AMPscript in the content
+            var contentWithAmpscript = `<div style="padding:20px; background-color:#f4f4f4;">
+                %%[ var @name, @discount
+                set @name = AttributeValue("First_Name")  // Assuming FirstName is a personalization string
+                set @discount = "20%" ]%%
+                Hello, %%=v(@name)=%%, get your %%=v(@discount)=%% off on your next purchase!
+                <br>
+                ${userInput}
+            </div>`;
+
+            // Set the content with embedded AMPscript
+            sdk.setContent(contentWithAmpscript);
 
         </script>
     </body>
